@@ -1,0 +1,225 @@
+:root {
+    --cor-primaria: white;
+    --cor-secundaria: black;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: #f77307;
+}
+
+main {
+    flex: 1 0 auto;
+    margin-top: 5%;
+}
+
+@media (max-width: 2000px) {
+    main {
+        margin-top: 180px;
+    }
+
+    .navegation {
+        height: 150px;
+    }
+
+    .div-botao-voltar {
+        margin-top: 45px;
+    }
+
+    .icone-header {
+        width: 100px;
+        height: 100px;
+    }
+
+    .div-icon-header {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 884px) {
+    main {
+        margin-top: 300px;
+    }
+
+    .navegation {
+        height: 150px;
+    }
+
+    .div-botao-voltar {
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 430px) {
+
+    main {
+        margin-top: 5%;
+        margin-bottom: 5%;
+    }
+
+    .navbar-fixed {
+        position: fixed;
+        /* Ou relative, se preferir */
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        /* Ajuste o valor se necessário */
+    }
+
+    .main-container {
+        margin-top: 180px;
+        /* Ajuste o valor para garantir que o conteúdo não fique escondido */
+    }
+
+    .div-botao-voltar {
+        margin-top: 15px;
+    }
+
+    .div-icon-header {
+        display: none;
+    }
+
+    .btn-voltar {
+        height: max-content;
+    }
+
+}
+
+
+/*Ajuste da altura barra rodapé*/
+.text-information {
+    font-size: medium;
+    padding-bottom: 5px;
+}
+
+.custom-icon {
+    color: var(--cor-primaria);
+}
+
+.btn-at-home {
+    width: 200px;
+    background-color: var(--cor-primaria) !important;
+    transition: background-color 0.1s, color 0.1s;
+}
+
+.btn-new-client,
+.btn-voltar, .btn-imp-balanco, .btn-filtrar {
+    font-size: 16px;
+    width: 200px;
+    background-color: #ef6c00;
+    transition: background-color 0.1s, color 0.1s;
+    font-weight: bold;
+}
+
+.btn-action-card, .btn-cad {
+    background-color: #ef6c00;
+    transition: background-color 0.1s, color 0.1s;
+    font-weight: bold;
+}
+
+.btn-new-client:hover,
+.btn-voltar:hover,
+.btn-action-card:hover,
+.btn-imp-balanco:hover,
+.btn-cad:hover, .btn-filtrar:hover {
+    background-color: #0301fa;
+    color: #ef6c00;
+    transition: background-color 0.1s, color 0.1s;
+}
+
+
+/* Customizando o botão */
+#btns-home:hover {
+    --cor-primaria: #0301fa;
+    transition: background-color 0.1s, color 0.1s;
+}
+
+
+.table-icons {
+    background-color: var(--cor-primaria) !important;
+    transition: background-color 0.1s, color 0.1s;
+    box-shadow: none;
+}
+
+.client-icon {
+    color: var(--cor-secundaria);
+
+}
+
+.venda-icon {
+    color: var(--cor-secundaria);
+
+}
+
+.table-icons:hover {
+    --cor-primaria: #0301fa;
+    --cor-secundaria: white;
+    transition: background-color 0.1s, color 0.1s;
+}
+
+
+
+.card-content img {
+    height: 200px; /* A imagem preenche a altura do contêiner */
+    object-fit: cover; /* Ajusta a imagem para preencher o espaço sem distorcer */
+}
+
+.input-pequisar {
+    background-color: #ef6c00;
+}
+
+.table-layout-fixed {
+    table-layout: fixed; /* Define layout fixo para a tabela */
+    width: 100%; /* Garante que ocupe a largura total */
+}
+
+.flex-container {
+    display: flex; /* Usar Flexbox para alinhar os itens */
+    align-items: center; /* Alinhar verticalmente */
+    gap: 8px; /* Espaço entre o select e o botão */
+}
+
+.select-wrapper {
+    flex-grow: 1; /* Faz o select ocupar o máximo de espaço disponível */
+}
+
+.btn-new-client {
+    display: inline-flex; /* Alinhar o botão corretamente */
+    align-items: center; /* Centralizar o ícone dentro do botão */
+    justify-content: center;
+    margin-left: 8px; /* Espaço à esquerda do botão */
+    width: 30px;
+}
+
+#lista-clientes, #lista-bairros {
+    background-color: #f0f0f0; /* Fundo cinza claro */
+    border: 1px solid #ccc; /* Borda leve */
+    border-radius: 8px; /* Bordas arredondadas */
+    max-height: 200px; /* Limita a altura da lista */
+    overflow-y: auto; /* Adiciona barra de rolagem se necessário */
+    margin-top: 10px; /* Espaçamento do campo de busca */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidade */
+    display: none; /* Inicia oculto */
+    padding: 0;
+    list-style-type: none; /* Remove marcadores de lista */
+}
+
+#lista-clientes li, #lista-bairros li {
+    padding: 10px; /* Espaçamento interno dos itens */
+    cursor: pointer; /* Mostra que os itens são clicáveis */
+    border-bottom: 1px solid #ddd; /* Linha entre os itens */
+}
+
+#lista-clientes li:hover, #lista-bairros li:hover {
+    background-color: #e0e0e0; /* Cor de fundo ao passar o mouse */
+}
+
+#lista-clientes li:last-child, #lista-bairros li:last-child {
+    border-bottom: none; /* Remove a borda inferior do último item */
+}
+
+
+

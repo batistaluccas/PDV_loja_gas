@@ -1,0 +1,342 @@
+..
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RC Gás e Água - Produtos</title>
+    <!-- Link para o Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Seu estilo personalizado -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../css/materialize.min.css">
+    <link rel="stylesheet" href="../css/custom.css">
+    <!-- Incluindo o jQuery e a biblioteca de máscara de telefone -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="../js/pedido.js"></script>
+    <script src="../js/CRUD_clientes.js"></script>
+    <script src="../js/finalizarPedido.js"></script>
+    <script src="../js/input_functions.js"></script>
+    <style>
+        @media (max-width: 2000px) {
+            main {
+                position: relative;
+                /* Ou relative, se preferir */
+                top: 0;
+                left: 0;
+                margin-top: 0px;
+                margin-top: 200px;
+            }
+
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+            }
+        }
+
+        @media (max-width: 885px) {
+            main {
+                margin-top: 200px;
+            }
+
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+            }
+
+            .navegation {
+                height: 150px;
+            }
+
+            .finalizar-text {
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .navbar {
+                position: relative;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+            }
+
+            .navegation {
+                height: 300px;
+            }
+
+            main {
+                margin-top: 20px;
+                margin-bottom: 5%;
+            }
+
+            .main-container {
+                margin-top: 10px;
+            }
+
+            .finalizar-text {
+                font-size: 16px;
+            }
+        }
+
+        .card {
+            width: 200px;
+            /* Defina a largura desejada */
+            height: max-content;
+            /* A altura se ajusta ao conteúdo */
+        }
+
+        .description,
+        .price {
+            font-weight: bold;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header class="navbar">
+        <nav class="navegation white">
+            <div class="row header-container">
+                <div class="col m4 l5 center div-icon-header">
+                    <div class="icon-container">
+                        <a>
+                            <p><img class="icone-header" src="../icons/grading.png" alt="icone"></p>
+                        </a>
+                    </div>
+                </div>
+                <div class="col s12 m4 l2 center"><img src="../img/logo.jpg" style="width: 200px; margin-top: 30px;"
+                        alt="Logo">
+                </div>
+
+                <div class="col s12 m4 l5 center div-botao-voltar">
+                    <a href="../pages/index.html" class="btn-voltar btn-small col s6 offset-s3">Voltar</a>
+                    <div class="row"></div>
+                    <button id="btn-finalizar" class="btn-voltar btn-small col s6 offset-s3 finalizar-text"
+                        type="submit" name="action">FINALIZAR
+                        PEDIDO</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Contêiner de produtos -->
+        <div class="container main-container">
+            <div id="produtos-container" class="produtos-container"></div>
+            <script>
+                gerarHTMLProdutos();
+            </script>
+        </div>
+
+        <!-- Contêiner da modal cadastrar -->
+        <div id="modal-cadastrar"> </div>
+        <script>
+            // Função para carregar a modal e adicionar o filtro
+            // Carregar o modal dinamicamente
+            fetch('modal_cadastrar_cliente.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao carregar o modal');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('modal-cadastrar').innerHTML = data;
+
+                    filtrar_bairro("search-bairro");
+
+                    // Inicializar a modal
+                    const elems = document.querySelectorAll('.modal');
+                    M.Modal.init(elems);
+                })
+                .catch(error => console.error('Erro ao carregar o modal:', error));
+
+        </script>
+
+
+
+        <!-- conteiner Modal Finalizar Pedido Estrutura -->
+        <div id="modal-finalizar" class="modal">
+            <div class="modal-content">
+                <h4>Resumo do Pedido</h4>
+                <ul id="cart-items" class="collection"></ul>
+                <h5>Subtotal dos itens: R$<span id="subtotal">0.00</span></h5>
+                <h5 class="center">Dados do Cliente</h5>
+                <div class="row"></div>
+                <form id="cliente-form" onsubmit="confirmarPedido(event)">
+                    <!-- Campo Select de Cliente -->
+                    <div class="input-field flex-container">
+                        <input type="text" id="search-cliente" placeholder="Buscar cliente...">
+                        <input type="hidden" id="id_cliente" name="id_cliente">
+                        <label for="select-cliente">Cliente</label>
+
+                        <a href="#!" class="btn-small btn-new-client modal-trigger" data-target="cadastrar-cliente">
+                            <i class="material-icons">add</i>
+                        </a>
+
+                    </div>
+                    <div>
+                        <ul id="lista-clientes"
+                            style="border: 1px solid #ccc; max-height: 150px; overflow-y: auto; display: none;"></ul>
+                    </div>
+
+                    <!-- Campo Select de Bairro -->
+                    <div class="input-field">
+                        <!-- Campo de pesquisa de bairros -->
+                        <input type="hidden" id="id_bairro" name="id_bairro">
+                        <input type="text" id="input-bairro" class="validate" placeholder="Digite o nome do bairro..."
+                            autocomplete="off">
+                        <label for="input-bairro">Bairro</label>
+
+                        <!-- Lista de sugestões de bairros -->
+                        <ul id="lista-bairros"
+                            style="border: 1px solid #ccc; max-height: 150px; overflow-y: auto; display: none;"></ul>
+                    </div>
+                    <script>
+                        filtrar_bairro("input-bairro");
+                        filtrar_cliente();
+                    </script>
+
+                    <div class="row">
+                        <!-- Campo Frete -->
+                        <div class="input-field col s6">
+                            <input id="frete" type="text" class="validate">
+                            <label for="frete">Frete</label>
+                        </div>
+
+                        <!-- Campo Rua -->
+                        <div class="input-field col s6">
+                            <input id="rua" type="text" class="validate">
+                            <label for="rua">Rua</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Campo Número -->
+                        <div class="input-field col s6">
+                            <input id="numero" type="number" class="validate">
+                            <label for="numero">Nº</label>
+                        </div>
+
+                        <!-- Campo Telefone -->
+                        <div class="input-field col s6">
+                            <input id="telefone" type="tel" class="validate">
+                            <label for="telefone">Telefone</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Botão de Confirmar Pedido -->
+                        <button id="" class="btn btn-cad col s4" type="submit">Confirmar Pedido</button>
+
+                        <div class="modal-footer col s2 right">
+                            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            Script_da_modal_finalizar();
+        </script>
+
+    </main>
+
+    <footer class="page-footer orange darken-4">
+        <div class="container center orange darken-4">
+            <p class="text-information">
+                © 2024 LV Soluções Tecnológicas. Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+
+
+    <!-- Script para formatar telefone-->
+    <script>
+        $(document).ready(function () {
+            $('#telefone').mask('(00) 00000-0000');
+        });
+    </script>
+
+    <script src="../js/materialize.min.js"></script>
+    <script src="../js/localStorage.js">
+        getLocalStorage("produtos");
+        getLocalStorage("clientes");
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Inicializa as modais presentes no HTML
+            var elems = document.querySelectorAll('.modal');
+            M.Modal.init(elems, {});
+
+            // Adiciona o evento de clique ao botão FINALIZAR PEDIDO
+            const btnFinalizar = document.getElementById('btn-finalizar');
+            if (btnFinalizar) {
+                btnFinalizar.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    // Preenche a modal com os produtos do carrinho
+                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+                    const cartItemsList = document.getElementById('cart-items');
+                    const subtotalElement = document.getElementById('subtotal');
+
+                    let subtotal = 0;
+                    cartItemsList.innerHTML = ''; // Limpa a lista existente
+
+                    cart.forEach(item => {
+                        // Encontra o produto correspondente
+                        const produto = produtos.find(p => p.id_produto === item.produto.id_produto);
+                        if (produto) {
+                            const valorUnitario = produto.preco_produto;
+                            const valorTotal = valorUnitario * item.quantidade_cart;
+                            subtotal += valorTotal;
+
+                            const listItem = document.createElement('li');
+                            listItem.className = 'collection-item';
+                            listItem.innerHTML = `
+                        ${produto.desc_produto} - 
+                        R$${valorUnitario.toFixed(2)} x ${item.quantidade_cart} = R$${valorTotal.toFixed(2)}
+                    `;
+                            cartItemsList.appendChild(listItem);
+                        }
+                    });
+
+                    // Atualiza o subtotal na modal
+                    subtotalElement.textContent = subtotal.toFixed(2);
+
+                    // Inicializa e abre a modal "Finalizar Pedido"
+                    const modalFinalizar = document.getElementById('modal-finalizar');
+                    const modalInstanceFinalizar = M.Modal.getInstance(modalFinalizar);
+                    modalInstanceFinalizar.open();
+                });
+            } else {
+                console.error('Botão FINALIZAR PEDIDO não encontrado.');
+            }
+
+
+        });
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,14 @@
+# Ignorar node_modules
+node_modules/
+
+# Ignorar builds do Electron
+dist/
+*.exe
+*.app
+*.dll
+
+# Arquivos de sistema e logs
+.DS_Store
+npm-debug.log
+yarn-debug.log
+yarn-error.log

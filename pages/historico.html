@@ -1,0 +1,310 @@
+..
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RC Gás e Água - Produtos</title>
+    <!-- Link para o Materialize CSS -->
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet"> -->
+
+    <!-- Seu estilo personalizado -->
+    <link rel="stylesheet" href="../css/materialize.min.css">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script src="../js/CRUD_historico.js"></script>
+    <script src="../js/modal_detalhar_nota.js"></script>
+    <style>
+        @media (max-width: 2000px) {
+            main {
+                position: relative;
+                /* Ou relative, se preferir */
+                top: 0;
+                left: 0;
+                z-index: 1000;
+                margin-top: 0px;
+            }
+        }
+
+        @media (max-width: 885px) {
+            main {
+                margin-top: 100px;
+            }
+
+            .navegation {
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .navegation {
+                height: 250px;
+            }
+
+            main {
+                margin-top: 0px;
+                margin-bottom: 5%;
+            }
+
+            .main-container {
+                margin-top: 20px;
+            }
+
+        }
+
+        .datepicker-date-display {
+            background-color: #ef6c00;
+        }
+
+        .btn-flat.datepicker-done.waves-effect,
+        .btn-flat.datepicker-cancel.waves-effect {
+            color: #ef6c00;
+        }
+
+        .datepicker-input {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .material-icons.prefix {
+            color: #ffffff;
+        }
+
+        .tabela-container {
+            max-height: 230px;
+            /* Ajuste conforme necessário */
+            overflow-y: auto;
+            /* Adiciona rolagem vertical */
+            display: block;
+        }
+
+        .tabela-container table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        .tabela-container thead th {
+            position: -webkit-sticky;
+            /* Para suporte a WebKit */
+            position: sticky;
+            top: 0;
+            background: white;
+            /* Cor de fundo para o cabeçalho fixo */
+            z-index: 10;
+            /* Garante que o cabeçalho fique acima do conteúdo */
+            border-bottom: 2px solid #ddd;
+            /* Adiciona uma borda inferior para o cabeçalho */
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navegation white">
+            <div class="row header-container">
+                <div class="col m4 l5 center div-icon-header">
+                    <div class="icon-container">
+                        <a>
+                            <p><img class="icone-header" src="../icons/history.png" alt="icone"></p>
+                        </a>
+                    </div>
+                </div>
+                <div class="col s12 m4 l2 center"><img src="../img/logo.jpg" style="width: 200px; margin-top: 30px;"
+                        alt="Logo">
+                </div>
+
+                <div class="col s12 m4 l5 center div-botao-voltar">
+                    <a href="../pages/index.html" class="btn-voltar btn-small">Voltar</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="row"></div>
+        <div class="col s12 center white-text">
+            <h1>HISTÓRICO DE VENDAS</h1>
+        </div>
+        </div>
+
+        <div class=" row container main-container">
+            <div class="row">
+                <div class="tabela-container">
+                    <table id="tabela-clientes" class=" white centered centered responsive-table table-layout-fixed">
+                        <thead>
+                            <tr>
+                                <th>Código Venda</th>
+                                <th>Nome</th>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>Descrição</th>
+                                <th>Telefone</th>
+                                <th>Valor Total</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tabela-corpo">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Campo de Data Inicial -->
+                <div class="col s4 offset-s1">
+                    <div class="input-field">
+                        <i class="material-icons prefix">calendar_month</i>
+                        <input type="text" id="data-inicio" class="datepicker center orange darken-4 datepicker-input"
+                            placeholder="De">
+                        <label for="data-inicio">Data Inicial</label>
+                    </div>
+                </div>
+
+                <div class="col s2"></div> <!-- Espaço entre os campos -->
+
+                <!-- Campo de Data Final -->
+                <div class="col s4">
+                    <div class="input-field">
+                        <i class="material-icons prefix">calendar_month</i>
+                        <input type="text" id="data-fim" class="datepicker center orange darken-4 datepicker-input"
+                            placeholder="Até">
+                        <label for="data-fim">Data Final</label>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var dataInicioElem = document.getElementById('data-inicio');
+                    var dataFimElem = document.getElementById('data-fim');
+
+                    // Inicializa o datepicker da data inicial
+                    var dataInicioPicker = M.Datepicker.init(dataInicioElem, {
+                        format: 'dd/mm/yyyy',
+                        i18n: {
+                            cancel: 'Cancelar',
+                            clear: 'Limpar',
+                            done: 'Selecionar',
+                            labelMonthNext: 'Próximo mês',
+                            labelMonthPrev: 'Mês anterior',
+                            months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                            monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                            weekdays: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],
+                            weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                            weekdaysAbbrev: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
+                        },
+                        onClose: function () {
+                            var dataInicio = dataInicioPicker.date; // Pega a data escolhida como início
+
+                            if (dataInicio) {
+                                // Define o limite de 15 dias a partir da data de início
+                                var maxDate = new Date(dataInicio);
+                                maxDate.setDate(maxDate.getDate() + 14); // 15 dias após a data inicial
+
+                                // Inicializa o datepicker da data final com os limites de data
+                                M.Datepicker.init(dataFimElem, {
+                                    format: 'dd/mm/yyyy',
+                                    minDate: dataInicio, // Definir a data mínima como a data de início
+                                    maxDate: maxDate,    // Definir a data máxima 15 dias depois da data de início
+                                    defaultDate: dataInicio, // Define a data inicial como a data padrão
+                                    setDefaultDate: true, // Faz com que o calendário mostre a data inicial como selecionada
+                                    i18n: {
+                                        cancel: 'Cancelar',
+                                        clear: 'Limpar',
+                                        done: 'Selecionar',
+                                        labelMonthNext: 'Próximo mês',
+                                        labelMonthPrev: 'Mês anterior',
+                                        months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                                        monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                                        weekdays: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],
+                                        weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                                        weekdaysAbbrev: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
+                                    }
+                                });
+
+                                // Abre automaticamente o datepicker da data final para o usuário escolher
+                                var dataFimPicker = M.Datepicker.getInstance(dataFimElem);
+                                dataFimPicker.open();
+                            }
+                        }
+                    });
+
+                    // Inicializa o datepicker da data final sem restrições inicialmente
+                    M.Datepicker.init(dataFimElem, {
+                        format: 'dd/mm/yyyy',
+                        i18n: {
+                            cancel: 'Cancelar',
+                            clear: 'Limpar',
+                            done: 'Selecionar',
+                            labelMonthNext: 'Próximo mês',
+                            labelMonthPrev: 'Mês anterior',
+                            months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                            monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                            weekdays: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],
+                            weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                            weekdaysAbbrev: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
+                        }
+                    });
+                });
+            </script>
+
+            <div class="row">
+                <div class="col s12 center">
+                    <button id="filtrar-vendas" class="btn btn-filtrar" onclick="filtrarVendas()">Filtrar</button>
+                </div>
+            </div>
+
+            <div id="modal-placeholder"></div>
+            <script>
+                // Carrega o HTML da modal de um arquivo separado
+                async function carregarModal() {
+                    try {
+                        const response = await fetch('modal_detalhar_nota.html');
+                        if (!response.ok) {
+                            throw new Error('Erro ao carregar modal: ' + response.statusText);
+                        }
+                        const modalHtml = await response.text();
+                        document.getElementById('modal-placeholder').innerHTML = modalHtml;
+
+                        // Inicia a modal após carregar o HTML
+                        M.Modal.init(document.querySelector('#detalhar-venda'));
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+
+                // Chamando a função para carregar a modal
+                carregarModal();
+
+
+            </script>
+
+
+
+
+        </div>
+    </main>
+
+    <footer class="page-footer orange darken-4">
+        <div class="container center orange darken-4">
+            <p class="text-information">
+                © 2024 LV Soluções Tecnológicas. Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../js/materialize.min.js"></script>
+    <script src="../js/localStorage.js">
+        getLocalStorage("produtos");
+        getLocalStorage("clientes");
+    </script>
+</body>
+
+</html>

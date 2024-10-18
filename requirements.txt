@@ -1,0 +1,7 @@
+
+
+npm install escpos;
+npm install qrcode;
+npm install escpos-usb;
+
+

@@ -97,12 +97,18 @@ function gerarHTMLProdutos() {
 
         // Adiciona o card à row atual
         row.appendChild(productCard);
-        atualizarQuantidadeNoHTML(produto.id_produto);
+
+        
 
 
     });
 
     container.appendChild(row); // Adiciona a nova linha ao contêiner
+
+    produtos.forEach((produto) => {
+        atualizarQuantidadeNoHTML(produto.id_produto);
+    });
+
 
 }
 
@@ -171,10 +177,10 @@ function atualizarQuantidadeNoHTML(id_produto) {
 
     // Encontra o item no carrinho
     const item = cart.find(item => item.produto.id_produto === id_produto);
-    console.log(item);
 
     // Encontra o elemento da quantidade no HTML usando o ID único
     const quantityElement = document.getElementById(`quantity-${id_produto}`);
+    
 
     if (quantityElement) {
         // Define a quantidade como 0 se o item não estiver no carrinho, caso contrário usa a quantidade do item

@@ -6,8 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RC Gás e Água - Produtos</title>
-    <!-- Link para o Materialize CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <!-- Seu estilo personalizado -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/materialize.min.css">
@@ -15,6 +13,7 @@
     <!-- Incluindo o jQuery e a biblioteca de máscara de telefone -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="../js/materialize.min.js"></script>
     <script src="../js/pedido.js"></script>
     <script src="../js/CRUD_clientes.js"></script>
     <script src="../js/finalizarPedido.js"></script>
@@ -102,6 +101,11 @@
             white-space: nowrap;
             overflow: hidden;
         }
+
+        .opc_entrega_container {
+            justify-content: center;
+
+        }
     </style>
 
 </head>
@@ -172,89 +176,127 @@
         <!-- conteiner Modal Finalizar Pedido Estrutura -->
         <div id="modal-finalizar" class="modal">
             <div class="modal-content">
-                <h4>Resumo do Pedido</h4>
-                <ul id="cart-items" class="collection"></ul>
-                <h5>Subtotal dos itens: R$<span id="subtotal">0.00</span></h5>
-                <h5 class="center">Dados do Cliente</h5>
-                <div class="row"></div>
-                <form id="cliente-form" onsubmit="confirmarPedido(event)">
-                    <!-- Campo Select de Cliente -->
-                    <div class="input-field flex-container">
-                        <input type="text" id="search-cliente" placeholder="Buscar cliente...">
-                        <input type="hidden" id="id_cliente" name="id_cliente">
-                        <label for="select-cliente">Cliente</label>
+                <h5 class="center">Resumo do Pedido</h5>
+                <table class="striped">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Preço Unitário</th>
+                            <th>Quantidade</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items"></tbody>
+                </table>
+                <h6>Subtotal: R$<span id="subtotal">0.00</span></h6>
+                <br>
+                <hr>
 
-                        <a href="#!" class="btn-small btn-new-client modal-trigger" data-target="cadastrar-cliente">
-                            <i class="material-icons">add</i>
-                        </a>
 
-                    </div>
-                    <div>
-                        <ul id="lista-clientes"
-                            style="border: 1px solid #ccc; max-height: 150px; overflow-y: auto; display: none;"></ul>
-                    </div>
 
-                    <!-- Campo Select de Bairro -->
-                    <div class="input-field">
-                        <!-- Campo de pesquisa de bairros -->
-                        <input type="hidden" id="id_bairro" name="id_bairro">
-                        <input type="text" id="input-bairro" class="validate" placeholder="Digite o nome do bairro..."
-                            autocomplete="off">
-                        <label for="input-bairro">Bairro</label>
 
-                        <!-- Lista de sugestões de bairros -->
-                        <ul id="lista-bairros"
-                            style="border: 1px solid #ccc; max-height: 150px; overflow-y: auto; display: none;"></ul>
-                    </div>
-                    <script>
-                        filtrar_bairro("input-bairro");
-                        filtrar_cliente();
-                    </script>
+                <!-- Botões de Entrega e Retirada -->
+                <h5 class="center">Escolha o Método de Entrega</h5>
+                <br>
+                <div class="flex-container opc_entrega_container">
+                    <button id="btn-entrega" class="btn btn-cad col s4"
+                        onclick="mostrarFormulario('entrega')">Entrega</button>
+                    <button id="btn-retirada" class="btn btn-cad col s4"
+                        onclick="mostrarFormulario('retirada')">Retirada</button>
+                    <input id="verifica-entrega" type="text" value="true" hidden>
+                </div>
+                <br>
+                <hr>
+                <br>
 
-                    <div class="row">
-                        <!-- Campo Frete -->
-                        <div class="input-field col s6">
-                            <input id="frete" type="text" class="validate">
-                            <label for="frete">Frete</label>
+                <!-- Formulário de Cliente -->
+
+                <div id="formulario-cliente" style="display: none;">
+                    <h5 class="center">Dados do Cliente</h5>
+                    <br>
+                    <form class="center" id="cliente-form" onsubmit="confirmarPedido(event)">
+                        <div id="entrega-form" style="display: none;">
+                            <!-- Campo Select de Cliente -->
+                            <div class="input-field flex-container">
+                                <input type="text" id="search-cliente" placeholder="Buscar cliente...">
+                                <input type="hidden" id="id_cliente" name="id_cliente">
+                                <label for="select-cliente">Cliente</label>
+
+                                <a href="#!" class="btn-small btn-new-client modal-trigger"
+                                    data-target="cadastrar-cliente">
+                                    <i class="material-icons">add</i>
+                                </a>
+                            </div>
+                            <div>
+                                <ul id="lista-clientes"
+                                    style="border: 1px solid #ccc; max-height: 150px; overflow-y: auto; display: none;">
+                                </ul>
+                            </div>
+
+                            <!-- Campo Select de Bairro -->
+                            <div class="input-field">
+                                <input type="hidden" id="id_bairro" name="id_bairro">
+                                <input type="text" id="input-bairro" class="validate"
+                                    placeholder="Digite o nome do bairro..." autocomplete="off">
+                                <label for="input-bairro">Bairro</label>
+
+                                <ul id="lista-bairros"
+                                    style="border: 1px solid #ccc; max-height: 150px; overflow-y: auto; display: none;">
+                                </ul>
+                            </div>
+                            <script>
+                                filtrar_bairro("input-bairro");
+                                filtrar_cliente();
+                            </script>
+
+                            <div class="row">
+                                <!-- Campo Frete -->
+                                <div class="input-field col s6">
+                                    <input id="frete" type="text" class="validate">
+                                    <label for="frete">Frete</label>
+                                </div>
+
+                                <!-- Campo Rua -->
+                                <div class="input-field col s6">
+                                    <input id="rua" type="text" class="validate">
+                                    <label for="rua">Rua</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Campo Número -->
+                                <div class="input-field col s6">
+                                    <input id="numero" type="number" class="validate">
+                                    <label for="numero">Nº</label>
+                                </div>
+
+                                <!-- Campo Telefone -->
+                                <div class="input-field col s6">
+                                    <input id="telefone" type="tel" class="validate">
+                                    <label for="telefone">Telefone</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row input-field">
+                            <!-- CPF/CNPJ caso o cliente pedir -->
+                            <input id="CPF/CNPJ_cliente" type="tel" class="validate">
+                            <label for="CPF/CNPJ_cliente">CPF/CNPJ do cliente (opcional)</label>
                         </div>
 
-                        <!-- Campo Rua -->
-                        <div class="input-field col s6">
-                            <input id="rua" type="text" class="validate">
-                            <label for="rua">Rua</label>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <!-- Campo Número -->
-                        <div class="input-field col s6">
-                            <input id="numero" type="number" class="validate">
-                            <label for="numero">Nº</label>
-                        </div>
+                        <div class="row">
+                            <!-- Botão de Confirmar Pedido -->
+                            <button class="btn btn-cad col s4" type="submit">Confirmar Pedido</button>
 
-                        <!-- Campo Telefone -->
-                        <div class="input-field col s6">
-                            <input id="telefone" type="tel" class="validate">
-                            <label for="telefone">Telefone</label>
+                            <div class="modal-footer col s2 right">
+                                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <!-- Botão de Confirmar Pedido -->
-                        <button id="" class="btn btn-cad col s4" type="submit">Confirmar Pedido</button>
-
-                        <div class="modal-footer col s2 right">
-                            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-
-        <script>
-            Script_da_modal_finalizar();
-        </script>
-
     </main>
 
     <footer class="page-footer orange darken-4">
@@ -274,7 +316,7 @@
         });
     </script>
 
-    <script src="../js/materialize.min.js"></script>
+
     <script src="../js/localStorage.js">
         getLocalStorage("produtos");
         getLocalStorage("clientes");
@@ -288,44 +330,23 @@
 
             // Adiciona o evento de clique ao botão FINALIZAR PEDIDO
             const btnFinalizar = document.getElementById('btn-finalizar');
+
             if (btnFinalizar) {
                 btnFinalizar.addEventListener('click', function (e) {
-                    e.preventDefault();
+                    e.preventDefault();  // Evita recarregar a página
+                    const cart = JSON.parse(localStorage.getItem("cart"));
+                    if (cart.length > 0) {
+                        preencherModalCarrinho();  // Preenche a modal com os itens do carrinho
+                        // Abre a modal "Finalizar Pedido"
+                        const modalFinalizar = document.getElementById('modal-finalizar');
+                        const modalInstanceFinalizar = M.Modal.getInstance(modalFinalizar);
+                        modalInstanceFinalizar.open();
+                    }
+                    else {
+                        M.toast({ html: `Seu carrinho está vazio, adicione itens`, classes: 'green' });
+                    }
 
-                    // Preenche a modal com os produtos do carrinho
-                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
-                    const cartItemsList = document.getElementById('cart-items');
-                    const subtotalElement = document.getElementById('subtotal');
 
-                    let subtotal = 0;
-                    cartItemsList.innerHTML = ''; // Limpa a lista existente
-
-                    cart.forEach(item => {
-                        // Encontra o produto correspondente
-                        const produto = produtos.find(p => p.id_produto === item.produto.id_produto);
-                        if (produto) {
-                            const valorUnitario = produto.preco_produto;
-                            const valorTotal = valorUnitario * item.quantidade_cart;
-                            subtotal += valorTotal;
-
-                            const listItem = document.createElement('li');
-                            listItem.className = 'collection-item';
-                            listItem.innerHTML = `
-                        ${produto.desc_produto} - 
-                        R$${valorUnitario.toFixed(2)} x ${item.quantidade_cart} = R$${valorTotal.toFixed(2)}
-                    `;
-                            cartItemsList.appendChild(listItem);
-                        }
-                    });
-
-                    // Atualiza o subtotal na modal
-                    subtotalElement.textContent = subtotal.toFixed(2);
-
-                    // Inicializa e abre a modal "Finalizar Pedido"
-                    const modalFinalizar = document.getElementById('modal-finalizar');
-                    const modalInstanceFinalizar = M.Modal.getInstance(modalFinalizar);
-                    modalInstanceFinalizar.open();
                 });
             } else {
                 console.error('Botão FINALIZAR PEDIDO não encontrado.');

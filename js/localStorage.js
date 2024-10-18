@@ -52,7 +52,7 @@ async function setLocalStorage() {
   
 async function CRUD_API(tabela, metodo, id, dados = null) {
   // URL da API onde os dados serão enviados
-  const url = `https://batistaluccas.pythonanywhere.com/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
+  const url = `http://127.0.0.1:8000/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
 
   // Configuração da requisição
   const options = {
@@ -79,7 +79,8 @@ async function CRUD_API(tabela, metodo, id, dados = null) {
     }
 
     const resultado = await response.json(); // Converte a resposta para JSON
-    console.log(resultado); // Exibe o resultado no console
+    
+    console.log('aqui', resultado); // Exibe o resultado no console
     return resultado; // Retorna o resultado
   } catch (error) {
     console.error("Erro ao consumir a API:", error); // Trata erros na requisição

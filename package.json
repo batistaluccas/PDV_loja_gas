@@ -2,9 +2,9 @@
   "name": "pdv",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js", 
+  "main": "main.js",
   "scripts": {
-    "start": "electron .", 
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,5 +12,10 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^33.0.0"
+  },
+  "dependencies": {
+    "escpos": "^3.0.0-alpha.6",
+    "escpos-usb": "^3.0.0-alpha.4",
+    "qrcode": "^1.5.4"
   }
 }

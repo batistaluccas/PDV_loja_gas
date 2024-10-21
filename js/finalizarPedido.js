@@ -80,7 +80,11 @@ async function confirmarPedido(event) {
     const id_bairro = parseInt(document.getElementById('id_bairro').value) || null;
     const rua_entrega = document.getElementById('rua').value || null;
     const numero_entrega = document.getElementById('numero').value || null;
-    const telefone_cliente = document.getElementById('telefone').value || null;
+    let telefone_cliente = document.getElementById('telefone').value || null;
+    if (telefone_cliente != null){
+
+        telefone_cliente = telefone_cliente.replace(/\D/g, '');
+    }
 
     if (entrega.value === true){
         // Recuperar os dados do cliente selecionado e outros campos
@@ -209,9 +213,35 @@ async function confirmarPedido(event) {
             })
         };
         
-        const cliente_JSON = {
+        let cliente_JSON = {
 
         };
+
+        const documentoInput = document.getElementById('CPF/CNPJ_cliente');
+        console.log('aqqqq', documentoInput.value)
+
+        if (documentoInput) {
+            // Remove caracteres não numéricos
+            let valor_documento = documentoInput.value.replace(/\D/g, '');
+
+            let tipo_documento = ""; // Declara a variável fora do bloco
+
+            if (valor_documento.length === 11) {
+                tipo_documento = "CPF"; // Corrigido para CPF
+            } else if (valor_documento.length === 14) {
+                tipo_documento = "CNPJ"; // Corrigido para CNPJ
+            }
+
+            // Apenas cria o objeto se o tipo de documento estiver definido
+            if (tipo_documento) {
+                cliente_JSON = {
+                    valor_documento: valor_documento,
+                    tipo_documento: tipo_documento
+                };
+            }
+        } else {
+            console.error('Elemento CPF/CNPJ_cliente não encontrado.');
+        }
 
         let novoJson = {
             dados_nota: nota_JSON,
@@ -252,9 +282,14 @@ async function emitir_NFCE(dados_JSON) {
               // Converte 'data' de string JSON para objeto JSON
               const data = JSON.parse(response.data);
               console.log('Objeto JSON:', data); // Exibe o objeto JSON corretamente
+
               if (data != null){
 
                 M.toast({html: `Nota emitida`, classes: 'green'});
+
+                localStorage.setItem('notaFiscalData', JSON.stringify(data));
+
+                window.location.href = '../pages/NFC-e.html';
               }
               else{
                 M.toast({html: `Erro ao emitir Nota`, classes: 'red'});
@@ -271,5 +306,7 @@ async function emitir_NFCE(dados_JSON) {
     catch (error){
         console.error('Erro ao emitir nota fiscal', error);
     }
+
+
 }
 

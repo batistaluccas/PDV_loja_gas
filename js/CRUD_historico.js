@@ -44,7 +44,7 @@ function popularTabela(vendas) {
 
     function getNomeCliente(idCliente) {
         const clienteEncontrado = clientes.find(cliente => cliente.id_cliente === idCliente);
-        return clienteEncontrado ? clienteEncontrado.nome_cliente : 'N/A'; // Retorna 'N/A' se não encontrar
+        return clienteEncontrado ? clienteEncontrado.nome_cliente : 'Não informado'; // Retorna 'N/A' se não encontrar
     }
 
     const tabelaCorpo = document.getElementById("tabela-corpo");
@@ -55,11 +55,11 @@ function popularTabela(vendas) {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${venda.id_nota_venda}</td>
-            <td>${nome_cliente || 'N/A'}</td>
-            <td>${new Date(venda.data_nota_venda).toLocaleDateString('pt-BR')}</td>
-            <td>${venda.hora_nota_venda || 'N/A'}</td>
-            <td>${venda.rua_entrega || 'N/A'}</td>
-            <td>${venda.telefone_entrega || 'N/A'}</td>
+            <td>${nome_cliente || 'Não informado'}</td>
+            <td>${formatar_data(venda.data_nota_venda).dataFormatada || 'N/A'}</td>
+            <td>${formatar_data(venda.data_nota_venda).horaFormatada || 'N/A'}</td>
+            <td>${venda.rua_entrega || 'retirada'}</td>
+            <td>${venda.telefone_entrega || 'Não informado'}</td>
             <td>${venda.valor_total.toFixed(2)}</td>
             <td>
                 <a class="table-icons waves-effect waves-light btn-small modal-trigger" 
@@ -72,4 +72,23 @@ function popularTabela(vendas) {
         `;
         tabelaCorpo.appendChild(row);
     });
+}
+
+function formatar_data(data_nao_formatada) {
+    // Converte para um objeto Date
+    const dataObj = new Date(data_nao_formatada);
+
+    // Formata para dd/mm/aaaa hh:mm:ss
+    const dia = String(dataObj.getUTCDate()).padStart(2, '0');
+    const mes = String(dataObj.getUTCMonth() + 1).padStart(2, '0'); // Mês é indexado de 0 a 11
+    const ano = dataObj.getUTCFullYear();
+    const horas = String(dataObj.getUTCHours()).padStart(2, '0');
+    const minutos = String(dataObj.getUTCMinutes()).padStart(2, '0');
+    const segundos = String(dataObj.getUTCSeconds()).padStart(2, '0');
+
+    // Monta a string no formato desejado
+    return {
+        dataFormatada: `${dia}/${mes}/${ano}`,
+        horaFormatada: `${horas}:${minutos}:${segundos}`
+    }
 }

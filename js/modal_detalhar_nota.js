@@ -40,9 +40,14 @@ async function detalharVenda(idNotaVenda) {
         return; // Para de executar se não encontrar a venda
     }
 
+    let nome_bairro = null;
+    let totalFrete = 0;
     // Busca o bairro correspondente à venda
-    const bairro = bairros.find(b => b.id_bairro === venda.id_bairro_entrega);
-    const totalFrete = bairro ? bairro.frete_bairro : 0; // Se o bairro não for encontrado, assume frete 0
+    if (venda.id_bairro_entrega != null){
+        const bairro = bairros.find(b => b.id_bairro === venda.id_bairro_entrega);
+        nome_bairro = bairro.nome_bairro;
+        totalFrete = bairro ? bairro.frete_bairro : 0; // Se o bairro não for encontrado, assume frete 0
+    }
     const totalVenda = venda.valor_total - totalFrete;
 
     // Busca cliente da venda
@@ -52,9 +57,9 @@ async function detalharVenda(idNotaVenda) {
     // Preencher os campos da modal com os dados da venda
     document.getElementById('nome_cliente_detalhar').value = nome_cliente;
     document.getElementById('telefone_cliente_detalhar').value = venda.telefone_entrega;
-    document.getElementById('bairro_detalhar').value = bairro.nome_bairro;
-    document.getElementById('rua_detalhar').value = venda.rua_entrega;
-    document.getElementById('numero_detalhar').value = venda.numero_entrega;
+    document.getElementById('bairro_detalhar').value = nome_bairro || '';
+    document.getElementById('rua_detalhar').value = venda.rua_entrega || '';
+    document.getElementById('numero_detalhar').value = venda.numero_entrega || '';
     document.getElementById('frete-detalhar').textContent = totalFrete.toFixed(2);
     document.getElementById('subtotal-itens-detalhar').textContent = totalVenda.toFixed(2);
     document.getElementById('subtotal-detalhar').textContent = venda.valor_total.toFixed(2);

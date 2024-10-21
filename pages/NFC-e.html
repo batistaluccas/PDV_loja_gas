@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nota Fiscal</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 10px;
+            background-color: #b1a79f;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            /* Para ocupar toda a altura da janela */
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+            /* Espaçamento entre os botões e a nota */
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            background-color: #f77307;
+            /* Cor do botão */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            /* Cor do botão ao passar o mouse */
+        }
+
+        .nota-container {
+            width: 80mm;
+            background: white;
+            padding: 10px;
+            border: 1px solid black;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Sombra para a nota */
+        }
+
+        .logo {
+            text-align: center;
+        }
+
+        .logo img {
+            width: 50px;
+            height: auto;
+        }
+
+        .cabecalho {
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .cabecalho p {
+            margin: 2px 0;
+            font-size: 12px;
+        }
+
+        .tabela-itens {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        .tabela-itens th,
+        .tabela-itens td {
+            border-bottom: 1px solid #000;
+            padding: 5px;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .tabela-itens th {
+            background-color: #f0f0f0;
+        }
+
+        .total {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .qr-data-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .qr-code {
+            flex: 0 0 auto;
+            margin-right: 20px;
+            text-align: center;
+        }
+
+        .qr-code img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .data {
+            flex: 1;
+            font-size: 0.8em;
+            line-height: 1.2;
+        }
+
+        .chave-acesso {
+            font-size: 9px;
+            text-align: center;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 8px;
+            margin-top: 10px;
+        }
+
+        /* Estilos para impressão */
+        @media print {
+            body {
+                margin: 0;
+                /* Remove margens do body */
+                padding: 0;
+                /* Remove padding do body */
+            }
+
+            body * {
+                visibility: hidden;
+                /* Esconde todos os elementos */
+            }
+
+            .nota-container,
+            .nota-container * {
+                visibility: visible;
+                /* Exibe apenas a div que queremos imprimir */
+            }
+
+            .nota-container {
+                position: absolute;
+                /* Ajusta a posição para impressão */
+                left: 0;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="buttons">
+        <button class="button" onclick="window.print()">Imprimir</button>
+        <button class="button" onclick="window.location.href='index.html'">Voltar</button>
+    </div>
+
+    <div class="nota-container" id="#imprimirDiv">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="../img/logo.jpg" alt="Logo da Loja">
+        </div>
+
+        <!-- Cabeçalho -->
+        <div class="cabecalho">
+            <p><strong id="nome-emitente"></strong></p>
+            <p>CNPJ: <span id="cnpj-emitente"></span></p>
+            <p id="endereco-emitente"></p>
+            <p id="bairro-emitente"></p>
+            <p id="cidade-emitente"></p>
+            <p id="estado-emitente"></p>
+            <p>Fone: (11) 98763-2174</p>
+            <p>Documento Auxiliar da Nota Fiscal</p>
+            <p><strong>EMITIDA EM AMBIENTE DE HOMOLOGAÇÃO</strong></p>
+            <p>SEM VALOR FISCAL</p>
+        </div>
+
+        <!-- Tabela de Itens -->
+        <table class="tabela-itens">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Descrição</th>
+                    <th>Qtd</th>
+                    <th>V. Unit.</th>
+                    <th>V. Total</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-itens">
+                <!-- Os itens serão preenchidos aqui via JavaScript -->
+            </tbody>
+            <tr>
+                <td colspan="4">Frete</td>
+                <td id="frete"></td>
+            </tr>
+            <tr>
+                <td colspan="4" class="total">Valor Total</td>
+                <td id="valor-total"></td>
+            </tr>
+        </table>
+
+        <div class="chave-acesso">
+            <p>Consulte pela Chave de Acesso em:</p>
+            <p>https://www.homologacao.nfce.fazenda.sp.gov.br/consulta</p>
+            <p id="chave-acesso"></p>
+        </div>
+
+        <!-- QR Code e Dados -->
+        <div class="qr-data-container">
+            <!-- QR Code -->
+            <div class="qr-code">
+                <img id="qr-code" src="" alt="QR Code">
+            </div>
+
+            <!-- Chave de Acesso e Rodapé -->
+            <div class="data">
+                <div class="footer">
+                    <p><span id="consumidor"></span></p>
+                    <p>NFC-e nº <span id="id_nota"></span></p>
+                    <p>Série <span id="serie_nota"></span></p>
+                    <p>Data Emissão: <span id="data_emissao"></span></p>
+                    <p>Protocolo de Autorização: <span id="prot_autorizacao"></span></p>
+                    <p>Data de Autorização: <span id="data_autorizacao"></span></p>
+                    <p>Emitida em Ambiente de Homologação</p>
+                    <p>SEM VALOR FISCAL</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const data = JSON.parse(localStorage.getItem('notaFiscalData'));
+
+        // Preenchendo os dados do emitente
+        document.getElementById('nome-emitente').textContent = data.emitente.nome;
+        document.getElementById('cnpj-emitente').textContent = data.emitente.cnpj;
+        document.getElementById('endereco-emitente').textContent = `${data.emitente.endereco}, ${data.emitente.numero}`;
+        document.getElementById('bairro-emitente').textContent = data.emitente.bairro;
+        document.getElementById('cidade-emitente').textContent = `${data.emitente.cidade} - ${data.emitente.estado}`;
+
+        // Preenchendo a tabela de itens
+        const tabelaItens = document.getElementById('tabela-itens');
+        data.produtos.forEach((produto, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${String(index + 1).padStart(3, '0')}</td>
+                <td>${produto.descricao}</td>
+                <td>${produto.quantidade}</td>
+                <td>R$ ${produto.valor_unitario.toFixed(2)}</td>
+                <td>R$ ${produto.valor_total.toFixed(2)}</td>
+            `;
+            tabelaItens.appendChild(row);
+        });
+
+        // Preenchendo frete e total
+        document.getElementById('frete').textContent = `R$ ${parseFloat(data.frete).toFixed(2)}`;
+        document.getElementById('valor-total').textContent = `R$ ${parseFloat(data.total).toFixed(2)}`;
+
+        // Gerando QR Code e exibindo na nota
+        // Preenchendo QR Code
+        document.getElementById('qr-code').src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(data.qr_code)}&size=100x100`;
+
+        // Preenchendo chave de acesso
+        document.getElementById('chave-acesso').textContent = data.qr_code.split('?p=')[1].split('|')[0];
+
+        const cliente_doc = data.cliente_doc;
+        if (cliente_doc) {
+            if (cliente_doc.length == 11) {
+                document.getElementById('consumidor').textContent = 'CPF cliente: ' + data.cliente_doc;
+            }
+            else {
+                document.getElementById('consumidor').textContent = 'CNPJ cliente: ' + data.cliente_doc;
+            }
+        }
+        else {
+            document.getElementById('consumidor').textContent = 'Consumidor não identificado';
+        }
+
+        document.getElementById('id_nota').textContent = data.id_nota;
+
+        document.getElementById('serie_nota').textContent = data.serie;
+
+        document.getElementById('data_emissao').textContent = formatar_data(data.data_emissao);
+
+        document.getElementById('prot_autorizacao').textContent = data.prot_autorizacao;
+
+        document.getElementById('data_autorizacao').textContent = formatar_data(data.data_autorizacao);
+
+        function formatar_data(data_nao_formatada) {
+            // Converte para um objeto Date
+            const dataObj = new Date(data_nao_formatada);
+
+            // Formata para dd/mm/aaaa hh:mm:ss
+            const dia = String(dataObj.getUTCDate()).padStart(2, '0');
+            const mes = String(dataObj.getUTCMonth() + 1).padStart(2, '0'); // Mês é indexado de 0 a 11
+            const ano = dataObj.getUTCFullYear();
+            const horas = String(dataObj.getUTCHours()).padStart(2, '0');
+            const minutos = String(dataObj.getUTCMinutes()).padStart(2, '0');
+            const segundos = String(dataObj.getUTCSeconds()).padStart(2, '0');
+
+            // Monta a string no formato desejado
+            const dataFormatada = `${dia}/${mes}/${ano} ${horas}:${minutos}:${segundos}`;
+
+            return dataFormatada;
+        }
+    </script>
+</body>
+
+</html>

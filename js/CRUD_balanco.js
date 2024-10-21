@@ -19,28 +19,27 @@ function listaVendasDia() {
         // Nome Cliente - Aqui é necessário obter o nome do cliente de uma outra fonte, assumindo que você tem um array 'clientes'
         const cliente = clientes.find(c => c.id_cliente === item.id_cliente);
         const cellNome = document.createElement('td');
-        cellNome.textContent = cliente ? cliente.nome_cliente : 'N/A';
+        cellNome.textContent = cliente ? cliente.nome_cliente : 'Não informado';
         row.appendChild(cellNome);
     
         // Data (data_nota_venda)
         const cellData = document.createElement('td');
-        cellData.textContent = item.data_nota_venda || 'N/A';
+        cellData.textContent = formatar_data(item.data_nota_venda).dataFormatada || 'N/A';
         row.appendChild(cellData);
     
         // Hora (é necessário separar a hora da data, caso exista um campo separado de hora)
         const cellHora = document.createElement('td');
-        const dataHora = new Date(item.data_nota_venda); // Converte a string de data para objeto Date
-        cellHora.textContent = dataHora.toLocaleTimeString() || 'N/A'; // Extrai a hora formatada
+        cellHora.textContent = formatar_data(item.data_nota_venda).dataFormatada || 'N/A'; // Extrai a hora formatada
         row.appendChild(cellHora);
     
         // Descrição - (neste caso, vou usar a combinação de rua e número para fornecer uma "descrição")
         const cellDescricao = document.createElement('td');
-        cellDescricao.textContent = `${item.rua_entrega}, ${item.numero_entrega}` || 'N/A';
+        cellDescricao.textContent = cliente ? `${item.rua_entrega}, ${item.numero_entrega}` : 'Retirada';
         row.appendChild(cellDescricao);
     
         // Telefone (telefone_entrega)
         const cellTelefone = document.createElement('td');
-        cellTelefone.textContent = item.telefone_entrega || 'N/A';
+        cellTelefone.textContent = item.telefone_entrega || 'Não informado';
         row.appendChild(cellTelefone);
     
         // Valor Total (valor_total)
@@ -129,4 +128,23 @@ async function balancoParcial() {
     tabela.appendChild(row);
     
     
+}
+
+function formatar_data(data_nao_formatada) {
+    // Converte para um objeto Date
+    const dataObj = new Date(data_nao_formatada);
+
+    // Formata para dd/mm/aaaa hh:mm:ss
+    const dia = String(dataObj.getUTCDate()).padStart(2, '0');
+    const mes = String(dataObj.getUTCMonth() + 1).padStart(2, '0'); // Mês é indexado de 0 a 11
+    const ano = dataObj.getUTCFullYear();
+    const horas = String(dataObj.getUTCHours()).padStart(2, '0');
+    const minutos = String(dataObj.getUTCMinutes()).padStart(2, '0');
+    const segundos = String(dataObj.getUTCSeconds()).padStart(2, '0');
+
+    // Monta a string no formato desejado
+    return {
+        dataFormatada: `${dia}/${mes}/${ano}`,
+        horaFormatada: `${horas}:${minutos}:${segundos}`
+    }
 }

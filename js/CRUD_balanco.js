@@ -29,7 +29,7 @@ function listaVendasDia() {
     
         // Hora (é necessário separar a hora da data, caso exista um campo separado de hora)
         const cellHora = document.createElement('td');
-        cellHora.textContent = formatar_data(item.data_nota_venda).dataFormatada || 'N/A'; // Extrai a hora formatada
+        cellHora.textContent = formatar_data(item.data_nota_venda).horaFormatada || 'N/A'; // Extrai a hora formatada
         row.appendChild(cellHora);
     
         // Descrição - (neste caso, vou usar a combinação de rua e número para fornecer uma "descrição")

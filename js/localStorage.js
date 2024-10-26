@@ -49,16 +49,22 @@ async function setLocalStorage() {
       console.error('Erro ao definir dados no localStorage:', error);
     }
   }
+
+
   
 async function CRUD_API(tabela, metodo, id, dados = null) {
   // URL da API onde os dados serão enviados
-  //const url = `http://18.231.95.51/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
-  const url = `http://127.0.0.1:8000/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
+  const url = `http://44.203.59.136/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
+  //const url = `http://127.0.0.1:8000/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
+  const token = sessionStorage.getItem("authToken");
+
+  console.log(token);
 
   // Configuração da requisição
   const options = {
     method: metodo,
     headers: {
+      'Authorization': `Token ${token}`,
       'Content-Type': 'application/json'
     }
   };

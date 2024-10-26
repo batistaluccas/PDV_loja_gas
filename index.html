@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="./css/materialize.min.css">
     <link rel="stylesheet" href="./css/custom.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="./js/auth.js"></script>
 </head>
 
 <body>
@@ -26,6 +27,29 @@
                 <div class="col s4 center hide" style="margin-top: 40px;"><a
                         class="waves-effect waves-light btn-small orange darken-3">Button</a></div>
             </div>
+            <div class="row">
+                <div class="col s12 center ">
+                    <span>Usuário logado: </span>
+                    <span id="username" class="teal-text text-darken-1"></span>
+                </div>
+            </div>
+            <script>
+                async function exibir_user() {
+                    try {
+                        const username = await verificarAutenticacao(); // Verifique se esta função está exportada corretamente em auth.js
+                        document.getElementById("username").textContent = username;
+                    } catch (error) {
+                        console.error("Erro ao verificar autenticação:", error);
+                        document.getElementById("username").textContent = "Erro ao carregar usuário";
+                    }
+                }
+
+                // Chama a função após o carregamento do DOM
+                document.addEventListener('DOMContentLoaded', (event) => {
+                    exibir_user(); // Chama a função para exibir o usuário
+                });
+
+            </script>
         </nav>
     </header>
 

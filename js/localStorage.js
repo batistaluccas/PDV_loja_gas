@@ -54,7 +54,7 @@ async function setLocalStorage() {
   
 async function CRUD_API(tabela, metodo, id, dados = null) {
   // URL da API onde os dados serão enviados
-  const url = `http://44.203.59.136/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
+  const url = `https://zzgdqoz2m1.execute-api.sa-east-1.amazonaws.com/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
   //const url = `http://127.0.0.1:8000/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
   const token = sessionStorage.getItem("authToken");
 

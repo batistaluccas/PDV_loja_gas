@@ -30,6 +30,7 @@ async function setLocalStorage() {
     const clientes = await CRUD_API("clientes", "GET");  
     const bairros = await CRUD_API("bairros", "GET");
     const vendas = await CRUD_API("balanco-diario", "GET");
+    const tipo_pagamento = await CRUD_API("tipos-pagamento", "GET");
     
     const cart = [];
     const nota_venda = [];
@@ -43,6 +44,7 @@ async function setLocalStorage() {
     localStorage.setItem('nota_venda', JSON.stringify(nota_venda));
     localStorage.setItem('item_nota_venda', JSON.stringify(item_nota_venda));
     localStorage.setItem('vendas', JSON.stringify(vendas));
+    localStorage.setItem('tipo_pagamento', JSON.stringify(tipo_pagamento));
       
       console.log('Dados armazenados com sucesso no localStorage');
     } catch (error) {
@@ -54,8 +56,8 @@ async function setLocalStorage() {
   
 async function CRUD_API(tabela, metodo, id, dados = null) {
   // URL da API onde os dados serão enviados
-  const url = `https://zzgdqoz2m1.execute-api.sa-east-1.amazonaws.com/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
-  //const url = `http://127.0.0.1:8000/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
+  //const url = `https://zzgdqoz2m1.execute-api.sa-east-1.amazonaws.com/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
+  const url = `http://127.0.0.1:8000/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
   const token = sessionStorage.getItem("authToken");
 
   console.log(token);

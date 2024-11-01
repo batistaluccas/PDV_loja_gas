@@ -134,15 +134,17 @@ function editarCliente(id_cliente) {
         const inputNumero = document.getElementById('numero');
         const inputID_Bairro = document.getElementById('id_bairro');
         const inputBairro = document.getElementById('input-bairro');
+        const inputCPF = document.getElementById('cpf_cliente');
 
         
-        if (inputId && inputNome && inputTelefone && inputRua && inputNumero && inputBairro) {
+        if (inputId && inputNome && inputTelefone && inputRua && inputNumero && inputBairro && inputCPF) {
             inputId.value = cliente.id_cliente || '';
             inputNome.value = cliente.nome_cliente || '';
             inputTelefone.value = cliente.telefone_cliente || '';
             inputRua.value = cliente.rua_cliente || '';
             inputNumero.value = cliente.numero_cliente || '';
             inputID_Bairro.value = cliente.id_bairro || '';
+            inputCPF.value = cliente.cpf_cliente || '';
             
             
             // Obtém a lista de bairros do localStorage
@@ -172,6 +174,7 @@ function editarCliente(id_cliente) {
         const rua_cliente = document.getElementById('rua').value;
         const numero_cliente = document.getElementById('numero').value;
         const id_bairro = parseInt(document.getElementById('id_bairro').value);
+        const cpf_cliente = document.getElementById('cpf_cliente').value;
     
         // Dados a serem enviados
         const clienteAtualizado = {
@@ -180,7 +183,8 @@ function editarCliente(id_cliente) {
             telefone_cliente: telefone_cliente,
             rua_cliente: rua_cliente,
             numero_cliente: numero_cliente,
-            id_bairro: id_bairro
+            id_bairro: id_bairro,
+            cpf_cliente: cpf_cliente
         };
 
         
@@ -248,6 +252,7 @@ async function cadastrarCliente() {
 
     
     const nome_cliente = document.getElementById('nome_cliente').value;
+    const cpf_cliente = document.getElementById('cpf_cliente').value;
     const telefone_cliente = document.getElementById('telefone_cliente').value;
     const rua_cliente = document.getElementById('rua_cliente').value;
     const numero_cliente = document.getElementById('numero_cliente').value;
@@ -256,6 +261,7 @@ async function cadastrarCliente() {
     // Criar um objeto de cliente
     let cliente = {
         nome_cliente,
+        cpf_cliente,
         telefone_cliente,
         rua_cliente,
         numero_cliente,

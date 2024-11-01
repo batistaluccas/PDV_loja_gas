@@ -80,6 +80,7 @@ async function confirmarPedido(event) {
     const id_bairro = parseInt(document.getElementById('id_bairro').value) || null;
     const rua_entrega = document.getElementById('rua').value || null;
     const numero_entrega = document.getElementById('numero').value || null;
+    const id_tipo_pagamento = document.getElementById('tipo_pagamento').value || null;
     let telefone_cliente = document.getElementById('telefone').value || null;
     if (telefone_cliente != null){
 
@@ -129,7 +130,7 @@ async function confirmarPedido(event) {
         data_nota_venda: new Date().toLocaleString('sv-SE', {
             timeZone: 'America/Sao_Paulo' // Define o fuso horário
         }).replace(' ', 'T'), // Gera formato ISO 8601 (YYYY-MM-DDTHH:mm:ss)
-        id_tipo_pagamento: 1,
+        id_tipo_pagamento: id_tipo_pagamento,
         entrega: entrega.value,
         id_cliente: id_cliente,
         id_emitente: 1,
@@ -170,29 +171,9 @@ async function confirmarPedido(event) {
             };
         });
 
-        // Adicionar os itens da nota à lista existente
-        itens.push(...itensNotaVenda);
+        
 
-        // Salvar os itens da nota no localStorage
-        localStorage.setItem('item_nota_venda', JSON.stringify(itens));
-
-        // Função principal para adicionar todos os itens
-        await adicionarItens(itensNotaVenda);
-
-        // Confirmar a ação
-        localStorage.removeItem("cart");
-        M.toast({html: `Venda cadastrada com sucesso!`, classes: 'green'});
-
-        // Fechar Modal
-        const modalInstance = M.Modal.getInstance(document.getElementById('modal-finalizar'));
-        if (modalInstance) {
-            modalInstance.close();
-        }
-
-        // Atualizar a quantidade no HTML para cada produto
-        itensNotaVenda.forEach(item => {
-            atualizarQuantidadeNoHTML(item.id_produto);
-        });
+        
 
         //-------------------------------------novo--------------------
 
@@ -251,7 +232,40 @@ async function confirmarPedido(event) {
         
         
         try{
-            await emitir_NFCE(novoJson);
+            resultado = await emitir_NFCE(novoJson);
+            if (resultado){
+                // Adicionar os itens da nota à lista existente
+                itens.push(...itensNotaVenda);
+
+                // Salvar os itens da nota no localStorage
+                localStorage.setItem('item_nota_venda', JSON.stringify(itens));
+
+                // Função principal para adicionar todos os itens
+                await adicionarItens(itensNotaVenda);
+
+                // Confirmar a ação
+                localStorage.removeItem("cart");
+                M.toast({html: `Venda cadastrada com sucesso!`, classes: 'green'});
+                M.toast({html: `Nota emitida`, classes: 'green'});
+
+                // Fechar Modal
+                const modalInstance = M.Modal.getInstance(document.getElementById('modal-finalizar'));
+                if (modalInstance) {
+                    modalInstance.close();
+                }
+
+                // Atualizar a quantidade no HTML para cada produto
+                itensNotaVenda.forEach(item => {
+                    atualizarQuantidadeNoHTML(item.id_produto);
+                });
+                setTimeout(function (){
+                    window.open('../pages/NFC-e.html','_blank');
+                }, 1000);
+            } else {
+                 // Verifica se a mensagem de erro contém "Rejeição: CPF do destinatário inválido"
+                 M.toast({html: `CPF do destinatário inválido`, classes: 'red'}); // Exibe mensagem de CPF inválido
+                 await CRUD_API("notas-venda", "DELETE", id_nota_venda, null);
+            }
         }
         catch(error) {
             console.error('erro ao emitir nfce ', error);
@@ -276,37 +290,31 @@ async function adicionarItens(itensNotaVenda) {
 
 async function emitir_NFCE(dados_JSON) {
     try {
-        await CRUD_API("emitir-nfe", "POST", null, dados_JSON)
-        .then(response => {
-            if (response.status === 'success') {
-              // Converte 'data' de string JSON para objeto JSON
-              const data = JSON.parse(response.data);
-              console.log('Objeto JSON:', data); // Exibe o objeto JSON corretamente
+        const response = (await CRUD_API("emitir-nfe", "POST", null, dados_JSON));
+        
+        if (response.status === 'success') {
+            // Converte 'data' de string JSON para objeto JSON
+            console.log("aqui: ", response);
+            const data = (response.data);
+            console.log('Objeto JSON:', data); // Exibe o objeto JSON corretamente
 
-              if (data != null){
-
-                M.toast({html: `Nota emitida`, classes: 'green'});
-
+            if (data != null) {
+                
                 localStorage.setItem('notaFiscalData', JSON.stringify(data));
 
-                window.location.href = '../pages/NFC-e.html';
-              }
-              else{
-                M.toast({html: `Erro ao emitir Nota`, classes: 'red'});
-              }
-
-              ipcRenderer.send('print', data);
+                return true; // Retorna true quando a nota é emitida com sucesso
             } else {
-              console.error('Erro na emissão:', response);
+                M.toast({html: `Erro ao emitir Nota`, classes: 'red'});
+                return false; // Retorna false se data for nulo
             }
-          })
-          .catch(error => console.error('Erro ao chamar API:', error));;
-
-    }
-    catch (error){
+        } else if (response.status === 'error') {
+            console.log("cai aqui")
+            M.toast({html: `${response.erro}`, classes: 'red'});
+            return false; // Retorna false em caso de erro
+        }
+    } catch (error) {
         console.error('Erro ao emitir nota fiscal', error);
+        return false; // Retorna false em caso de erro na função
     }
-
-
 }
 

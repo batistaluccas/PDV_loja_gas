@@ -330,6 +330,32 @@
                                 e.target.value = value; // Atualiza o valor do input com a máscara
                             });
                         </script>
+                        <div class="row input-field">
+                            <label for="tipo_pagamento" class="active">Tipo de pagamento: </label>
+                            <select name="pagamento" id="tipo_pagamento">
+                            </select>
+                        </div>
+                        <script>
+                            // Obtém os dados do tipo de pagamento do localStorage
+                            const tipo_pagamento = JSON.parse(localStorage.getItem("tipo_pagamento")) || [];
+                            const select_field = document.getElementById("tipo_pagamento");
+
+                            // Itera sobre os dados e cria uma opção para cada item
+                            tipo_pagamento.forEach(pagamento => {
+                                const option = document.createElement("option");
+                                option.value = pagamento.id_tipo_pagamento; // Ajuste conforme necessário
+                                option.textContent = pagamento.desc_tipo; // Ajuste conforme necessário
+                                select_field.appendChild(option);
+                            });
+
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const elems = document.querySelectorAll('select');
+                                M.FormSelect.init(elems);
+                            });
+                        </script>
+                        <br>
+                        <br>
+                        <br>
 
 
                         <div class="row">

@@ -204,6 +204,25 @@
 
                         filtrar_bairro("search-bairro");
 
+
+                        document.getElementById('cpf_cliente').addEventListener('input', function (e) {
+                            let value = e.target.value.replace(/\D/g, ''); // Remove qualquer caractere não numérico
+                            if (value.length <= 11) {
+                                // Máscara para CPF (000.000.000-00)
+                                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                            } else {
+                                // Máscara para CNPJ (00.000.000/0000-00)
+                                value = value.replace(/(\d{2})(\d)/, '$1.$2');
+                                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                                value = value.replace(/(\d{3})(\d)/, '$1/$2');
+                                value = value.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+                            }
+                            e.target.value = value; // Atualiza o valor do input com a máscara
+                        });
+
+
                         // Inicializar a modal
                         const elems = document.querySelectorAll('.modal');
                         M.Modal.init(elems);
@@ -287,6 +306,11 @@
                             <script>
                                 filtrar_bairro("input-bairro");
                             </script>
+                            <!----campo cpf--->
+                            <div class="input-field col s6">
+                                <input id="cpf_cliente" name="cpf_cliente" type="text" class="validate" required>
+                                <label class="active" for="cpf_cliente">CPF/CNPJ</label>
+                            </div>
                         </div>
 
                         <!-- Botão de Enviar -->

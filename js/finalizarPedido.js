@@ -137,7 +137,7 @@ async function confirmarPedido(event) {
         rua_entrega: rua_entrega,
         numero_entrega: numero_entrega,
         id_bairro_entrega: id_bairro,
-        telefone_cliente: telefone_cliente
+        telefone_entrega: telefone_cliente
 
     };
     

@@ -77,7 +77,7 @@ async function CRUD_API(tabela, metodo, id, dados = null) {
   };
 
    // Adiciona a confirmação para o método DELETE
-  if (metodo === 'DELETE') {
+  if (metodo === 'DELETE' && tabela !== 'notas-venda') {
     const confirmacao = confirm('Você tem certeza que deseja excluir este item?');
     if (!confirmacao) {
       console.log('Operação cancelada pelo usuário.');

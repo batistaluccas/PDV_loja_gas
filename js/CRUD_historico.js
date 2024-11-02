@@ -1,6 +1,7 @@
 async function filtrarVendas() {
     const dataInicio = document.getElementById("data-inicio").value; // Obter data de início
     const dataFim = document.getElementById("data-fim").value; // Obter data de fim
+    document.getElementById("tabela-clientes").style.display = '';
 
     // Função para converter data do formato MM/DD/YYYY para YYYY-MM-DD
     function converterData(data) {

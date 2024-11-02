@@ -20,7 +20,6 @@
                 /* Ou relative, se preferir */
                 top: 0;
                 left: 0;
-                z-index: 1000;
                 margin-top: 0px;
             }
         }
@@ -113,18 +112,23 @@
     <header>
         <nav class="navegation white">
             <div class="row header-container">
-                <div class="col m4 l5 center div-icon-header">
+                <div class="col s3 m2 l2 left " style="margin-top: 40px;">
+                    <a href="#" data-target="slide-out"
+                        class="sidenav-trigger btn-small show-on-large orange darken-3"><i
+                            class="material-icons">menu</i></a>
+                </div>
+                <div class="col s3 m3 l3 center div-icon-header">
                     <div class="icon-container">
                         <a>
                             <p><img class="icone-header" src="../icons/shelves.png" alt="icone"></p>
                         </a>
                     </div>
                 </div>
-                <div class="col s12 m4 l2 center"><img src="../img/logo.jpg" style="width: 200px; margin-top: 30px;"
+                <div class="col s6 m2 l2 center"><img src="../img/logo.jpg" style="width: 200px; margin-top: 30px;"
                         alt="Logo">
                 </div>
 
-                <div class="col s12 m4 l5 center div-botao-voltar">
+                <div class="col s12 m5 l5 center div-botao-voltar">
                     <div class="row center">
                         <div class="col s3"></div>
                         <div class="col s6">
@@ -143,6 +147,9 @@
             </div>
         </nav>
     </header>
+
+    <div id="sidebar-container" style="position: relative; z-index: 2000;"></div>
+
 
     <main>
         <div class="row">
@@ -332,6 +339,12 @@
             var instances = M.Modal.init(elems, {});
         });
 
+    </script>
+    <script src="../js/sidebar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            loadSidebar('./sidebar.html');
+        });
     </script>
 
 </body>

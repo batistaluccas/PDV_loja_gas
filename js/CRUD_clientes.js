@@ -220,7 +220,11 @@ function editarCliente(id_cliente) {
 async function deletarCliente(idCliente) {
     try {
         // Chama a API para deletar o cliente
-        await CRUD_API("clientes", "DELETE", idCliente);
+        let retorno = await CRUD_API("clientes", "DELETE", idCliente);
+        if(!retorno){
+            M.toast({html: `Ação cancelada pelo usuário`, classes: 'red'});
+            return;
+        }
         
         // Obter a lista de clientes do localStorage
         let clientes = JSON.parse(localStorage.getItem('clientes')) || [];

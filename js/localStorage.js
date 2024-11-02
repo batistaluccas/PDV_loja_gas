@@ -56,8 +56,8 @@ async function setLocalStorage() {
   
 async function CRUD_API(tabela, metodo, id, dados = null) {
   // URL da API onde os dados serão enviados
-  //const url = `https://zzgdqoz2m1.execute-api.sa-east-1.amazonaws.com/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
-  const url = `http://127.0.0.1:8000/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
+  const url = `https://zzgdqoz2m1.execute-api.sa-east-1.amazonaws.com/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
+  //const url = `http://127.0.0.1:8000/API/${tabela}/${id ? `${id}/` : ''}`; // Adiciona o ID à URL se ele existir
   const token = sessionStorage.getItem("authToken");
 
   console.log(token);
@@ -74,6 +74,15 @@ async function CRUD_API(tabela, metodo, id, dados = null) {
   // Adiciona o corpo da requisição se for necessário
   if (dados && (metodo === 'POST' || metodo === 'PUT' || metodo === 'PATCH')) {
     options.body = JSON.stringify(dados); // Converte os dados para JSON
+  };
+
+   // Adiciona a confirmação para o método DELETE
+  if (metodo === 'DELETE') {
+    const confirmacao = confirm('Você tem certeza que deseja excluir este item?');
+    if (!confirmacao) {
+      console.log('Operação cancelada pelo usuário.');
+      return false; // Cancela a operação se o usuário clicar em "Cancelar"
+    }
   }
 
   try {

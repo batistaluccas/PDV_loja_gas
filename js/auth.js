@@ -35,6 +35,9 @@ async function verificarAutenticacao() {
         // Verifica se a resposta é válida
         if (response) {
             console.log('Logado com sucesso! Usuário:', response.user); // Exibe o usuário no console
+            if (!sessionStorage.getItem('username')){
+                sessionStorage.setItem('username', response.user);
+            }
             return response.user;
         } else {
             console.log('Não autorizado'); // Exibe mensagem de não autorizado
@@ -46,8 +49,8 @@ async function verificarAutenticacao() {
 }
 
 async function auth_API(tabela, dados) {
-    const url = `http://127.0.0.1:8000/API/${tabela}/`;
-    //const url = `https://zzgdqoz2m1.execute-api.sa-east-1.amazonaws.com/${tabela}/`;
+    //const url = `http://127.0.0.1:8000/API/${tabela}/`;
+    const url = `https://zzgdqoz2m1.execute-api.sa-east-1.amazonaws.com/${tabela}/`;
 
     let options = {
         method: "POST",
@@ -76,3 +79,4 @@ async function auth_API(tabela, dados) {
         return null; // Retorna null em caso de erro
     }
 }
+

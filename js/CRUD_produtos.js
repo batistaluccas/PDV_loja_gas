@@ -207,8 +207,12 @@ function editarProduto(id_produto){
 async function deletarProduto(idProduto) {
     try {
         // Chama a API para deletar o produto
-        await CRUD_API("produtos", "DELETE", idProduto);
+        let retorno = await CRUD_API("produtos", "DELETE", idProduto);
 
+        if(!retorno){
+            M.toast({html: `Ação cancelada pelo usuário`, classes: 'red'});
+            return;
+        }
         // Obter a lista de produtos do localStorage
         let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
 

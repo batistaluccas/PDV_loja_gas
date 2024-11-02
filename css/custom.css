@@ -40,7 +40,7 @@ main {
 
 @media (max-width: 884px) {
     main {
-        margin-top: 300px;
+        margin-top: 150px;
     }
 
     .navegation {
@@ -65,7 +65,6 @@ main {
         top: 0;
         left: 0;
         width: 100%;
-        z-index: 1000;
         /* Ajuste o valor se necessário */
     }
 

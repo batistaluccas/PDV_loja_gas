@@ -60,13 +60,6 @@
             height: 2px;
         }
 
-        .tabela-container {
-            max-height: 230px;
-            /* Ajuste conforme necessário */
-            overflow-y: auto;
-            /* Adiciona rolagem vertical */
-            display: block;
-        }
 
         .tabela-container table {
             width: 100%;
@@ -143,7 +136,7 @@
                     <div class="row tabela-balanco">
                         <div class="tabela-container">
                             <table class="white centered centered responsive-table table-layout-fixed">
-                                <thead>
+                                <thead id="theadBalanco" style="display: none;">
                                     <tr>
                                         <th>Código Venda</th>
                                         <th>Nome</th>

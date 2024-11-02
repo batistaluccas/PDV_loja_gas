@@ -221,7 +221,7 @@ async function deletarCliente(idCliente) {
     try {
         // Chama a API para deletar o cliente
         let retorno = await CRUD_API("clientes", "DELETE", idCliente);
-        if(!retorno){
+        if(retorno === "cancelado"){
             M.toast({html: `Ação cancelada pelo usuário`, classes: 'red'});
             return;
         }

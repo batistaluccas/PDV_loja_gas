@@ -81,7 +81,7 @@ async function CRUD_API(tabela, metodo, id, dados = null) {
     const confirmacao = confirm('Você tem certeza que deseja excluir este item?');
     if (!confirmacao) {
       console.log('Operação cancelada pelo usuário.');
-      return false; // Cancela a operação se o usuário clicar em "Cancelar"
+      return "cancelado"; // Cancela a operação se o usuário clicar em "Cancelar"
     }
   }
 

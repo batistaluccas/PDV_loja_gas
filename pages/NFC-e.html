@@ -11,8 +11,8 @@
             font-family: 'Courier New', Courier, monospace;
             margin: 0;
             padding: 10px;
-            background-color: #b1a79f;
-            display: flex;
+            background-color: #4c4a48;
+            display: grid;
             justify-content: center;
             align-items: flex-start;
             height: 100vh;
@@ -21,12 +21,14 @@
 
         .buttons {
             display: flex;
-            flex-direction: column;
-            margin-right: 20px;
+            flex-direction: row;
+            justify-content: center;
+            gap: 80px;
             /* Espaçamento entre os botões e a nota */
         }
 
-        .button {
+        .button,
+        .btn-fechar {
             padding: 10px 20px;
             margin-bottom: 10px;
             background-color: #f77307;
@@ -42,8 +44,13 @@
             /* Cor do botão ao passar o mouse */
         }
 
+        .btn-fechar {
+            background-color: red;
+        }
+
         .nota-container {
-            width: 80mm;
+            max-width: 80mm;
+            min-width: 80mm;
             background: white;
             padding: 10px;
             border: 1px solid black;
@@ -62,7 +69,7 @@
 
         .cabecalho {
             text-align: center;
-            margin-top: 5px;
+            margin-top: 2px;
         }
 
         .cabecalho p {
@@ -73,7 +80,7 @@
         .tabela-itens {
             width: 100%;
             border-collapse: collapse;
-            margin: 10px 0;
+            margin: 0px 0;
         }
 
         .tabela-itens th,
@@ -162,10 +169,6 @@
         verificarAutenticacao();
     </script>
 
-    <div class="buttons">
-        <button class="button" onclick="window.print()">Imprimir</button>
-        <button class="button" onclick="window.location.href='../index.html'">Voltar</button>
-    </div>
 
     <div class="nota-container" id="#imprimirDiv">
         <!-- Logo -->
@@ -238,6 +241,12 @@
                 </div>
             </div>
         </div>
+    </div>
+
+
+    <div class="buttons">
+        <button class="btn-fechar" onclick="window.close();">X</button>
+        <button class="button" onclick="window.print()">Imprimir</button>
     </div>
 
     <script>

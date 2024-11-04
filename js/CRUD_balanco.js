@@ -4,7 +4,7 @@ function listaVendasDia() {
     tabelaBalancoDiario.innerHTML = ''; // Limpa a tabela antes de inserir os novos dados
     const clientes = JSON.parse(localStorage.getItem("clientes"));
     const vendas = JSON.parse(localStorage.getItem("vendas"));
-    if (vendas != []) {
+    if (vendas.length > 0) {
         document.getElementById('theadBalanco').style.display = '';
     }
 

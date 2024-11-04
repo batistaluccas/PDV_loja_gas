@@ -53,6 +53,7 @@ async function detalharVenda(idNotaVenda) {
     // Busca cliente da venda
     const cliente = clientes.find(c => c.id_cliente === venda.id_cliente);
     const nome_cliente = cliente ? cliente.nome_cliente : '';
+    const id_nota_venda = idNotaVenda;
 
     // Preencher os campos da modal com os dados da venda
     document.getElementById('nome_cliente_detalhar').value = nome_cliente;
@@ -64,6 +65,10 @@ async function detalharVenda(idNotaVenda) {
     document.getElementById('subtotal-itens-detalhar').textContent = totalVenda.toFixed(2);
     document.getElementById('subtotal-detalhar').textContent = venda.valor_total.toFixed(2);
     document.getElementById('observacoes_detalhar').value = venda.observacoes || '';
+    document.getElementById('nfce-btn').addEventListener('click', function() {
+        buscar_nfce(id_nota_venda); // Chama a função com o id_nota
+    });
+
 
     // Atualiza os campos de texto da modal após preencher
     M.updateTextFields();
@@ -109,5 +114,24 @@ async function buscarItensVenda(idNotaVenda) {
     } catch (error) {
         console.error('Erro ao buscar itens da venda:', error);
         return null; // Retorna null se houver um erro
+    }
+}
+async function buscar_nfce(id_nota) {
+    try {
+        console.log("teste", id_nota)
+        const JSON_nfce = await CRUD_API("nota-fiscal", "GET", `?id_nota=${id_nota}`);
+        const notaFiscalDados = JSON_nfce[0].dados;
+        console.log(`?id_nota=${id_nota}`);
+        if (JSON_nfce.length !== 0) {
+            localStorage.removeItem('notaFiscalData');
+            localStorage.setItem('notaFiscalData', JSON.stringify(notaFiscalDados));
+            window.open("./NFC-e.html");
+        } else {
+            console.error('Nenhum dado recebido da API.');
+        }
+        
+    } catch (error) {
+        console.error("Erro ao buscar NFC-e:", error);
+        // Você pode adicionar uma mensagem de erro para o usuário aqui, se necessário
     }
 }

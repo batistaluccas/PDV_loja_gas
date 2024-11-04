@@ -49,8 +49,8 @@ async function verificarAutenticacao() {
 }
 
 async function auth_API(tabela, dados) {
-    //const url = `http://127.0.0.1:8000/API/${tabela}/`;
-    const url = `https://zzgdqoz2m1.execute-api.sa-east-1.amazonaws.com/${tabela}/`;
+    const url = `http://127.0.0.1:8000/API/${tabela}/`;
+    //const url = `https://zzgdqoz2m1.execute-api.sa-east-1.amazonaws.com/${tabela}/`;
 
     let options = {
         method: "POST",

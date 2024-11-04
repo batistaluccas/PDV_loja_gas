@@ -1,4 +1,4 @@
-const { ipcRenderer } = require('electron');
+
 
 // Função para preencher a modal com os produtos do carrinho e calcular o subtotal
 function preencherModalCarrinho() {
@@ -153,8 +153,7 @@ async function confirmarPedido(event) {
         nota_venda_retornada = await CRUD_API("notas-venda", "POST", null, novaNotaVenda);
         notas.push(nota_venda_retornada);
 
-        // Salvar no localStorage
-        localStorage.setItem('vendas', JSON.stringify(notas));
+        
 
         const id_nota_venda = nota_venda_retornada.id_nota_venda;
 
@@ -239,6 +238,8 @@ async function confirmarPedido(event) {
 
                 // Salvar os itens da nota no localStorage
                 localStorage.setItem('item_nota_venda', JSON.stringify(itens));
+                // Salvar no localStorage
+                localStorage.setItem('vendas', JSON.stringify(notas));
 
                 // Função principal para adicionar todos os itens
                 await adicionarItens(itensNotaVenda);
@@ -300,8 +301,11 @@ async function emitir_NFCE(dados_JSON) {
 
             if (data != null) {
                 
+                let JSON_dados = {'dados': data}
+                console.log("teste: ", JSON.stringify(JSON_dados))
                 localStorage.setItem('notaFiscalData', JSON.stringify(data));
-
+                //await CRUD_API("salvar_NFE", "POST", null, JSON.stringify(data)); 
+                await CRUD_API("nota-fiscal", 'POST', null, JSON_dados);
                 return true; // Retorna true quando a nota é emitida com sucesso
             } else {
                 M.toast({html: `Erro ao emitir Nota`, classes: 'red'});

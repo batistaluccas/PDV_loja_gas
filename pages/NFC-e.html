@@ -312,12 +312,12 @@
             const dataObj = new Date(data_nao_formatada);
 
             // Formata para dd/mm/aaaa hh:mm:ss
-            const dia = String(dataObj.getUTCDate()).padStart(2, '0');
-            const mes = String(dataObj.getUTCMonth() + 1).padStart(2, '0'); // Mês é indexado de 0 a 11
-            const ano = dataObj.getUTCFullYear();
-            const horas = String(dataObj.getUTCHours()).padStart(2, '0');
-            const minutos = String(dataObj.getUTCMinutes()).padStart(2, '0');
-            const segundos = String(dataObj.getUTCSeconds()).padStart(2, '0');
+            const dia = String(dataObj.getDate()).padStart(2, '0');
+            const mes = String(dataObj.getMonth() + 1).padStart(2, '0'); // Mês é indexado de 0 a 11
+            const ano = dataObj.getFullYear();
+            const horas = String(dataObj.getHours()).padStart(2, '0');
+            const minutos = String(dataObj.getMinutes()).padStart(2, '0');
+            const segundos = String(dataObj.getSeconds()).padStart(2, '0');
 
             // Monta a string no formato desejado
             const dataFormatada = `${dia}/${mes}/${ano} ${horas}:${minutos}:${segundos}`;

@@ -140,6 +140,8 @@ async function confirmarPedido(event) {
         telefone_entrega: telefone_cliente
 
     };
+
+    console.log("hora: ", novaNotaVenda.data_nota_venda)
     
 
 

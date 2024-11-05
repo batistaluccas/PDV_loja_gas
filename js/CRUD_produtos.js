@@ -122,6 +122,8 @@ function editarProduto(id_produto){
             console.error('Produto não encontrado no localStorage.');
         }
     }
+
+    
     
     function preencherFormulario(produto) {
         // Verifique se todos os elementos existem antes de acessar suas propriedades
@@ -165,6 +167,12 @@ function editarProduto(id_produto){
     const quantidade_disponivel = parseInt(document.getElementById('quantidade').value);
     const nivel_abastecimento = parseInt(document.getElementById('nivel-abastecimento').value);
 
+    let valor_unitario_tributavel = preco_produto;
+    //converter o tributavel em kg no caso de Gás
+    if (id_produto == 1){
+        valor_unitario_tributavel = preco_produto / 13;
+    }
+
     // Dados a serem enviados
     const produtoAtualizado = {
         id_produto: id_produto,
@@ -174,32 +182,26 @@ function editarProduto(id_produto){
         imagem_produto: imagem_produto,
         quantidade_disponivel: quantidade_disponivel,
         nivel_abastecimento: nivel_abastecimento,
+        valor_unitario_tributavel: valor_unitario_tributavel
     };
 
     CRUD_API("produtos", "PUT", id_produto, produtoAtualizado);
 
     //o proximo codigo deve ser removido e o codigo comentado deve voltar quando for conectar com a API
 
-    function atualizarLocalStorage() {
-        let produtos = JSON.parse(localStorage.getItem("produtos")) || []; // Obtém produtos ou inicializa como array vazio
-
-        // Encontra o índice do produto a ser atualizado
-        const index = produtos.findIndex(p => p.id_produto === parseInt(produtoAtualizado.id_produto));
-
-        if (index !== -1) {
-            // Atualiza o produto no array
-            produtos[index] = produtoAtualizado;
-            // Salva o array atualizado no localStorage
+    async function atualizarLocalStorage(nome_produto) {
+        try {
+            const produtos = await CRUD_API("produtos", "GET");
             localStorage.setItem('produtos', JSON.stringify(produtos));
-            alert("Editado com sucesso!");
+            M.toast({html: `Produto "${nome_produto}" atualizado com sucesso!`, classes: 'green'});
             window.location.reload(); // Recarrega a página para refletir as alterações
-        } else {
-            console.error('Produto não encontrado no localStorage.');
-        }
+        } catch (error) {
+            console.error("Erro ao atualizar o localStorage:", error);
+        }       
     }
 
     // Chama a função para atualizar o localStorage
-    atualizarLocalStorage();
+    atualizarLocalStorage(nome_produto);
 });
         
 }

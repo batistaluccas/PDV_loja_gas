@@ -10,6 +10,10 @@ body {
     background-color: #f77307;
 }
 
+h1 {
+    font-size: 3rem;
+}
+
 main {
     flex: 1 0 auto;
     margin-top: 5%;
